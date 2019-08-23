@@ -1,0 +1,83 @@
+--10.1
+
+CREATE SCHEMA `bank` ;
+
+------
+
+CREATE TABLE `bank`.`customer` (
+  `c_id` VARCHAR(10) NOT NULL,
+  `cname` VARCHAR(20) NULL,
+  `mno` INT NULL,
+  `address` VARCHAR(30) NULL,
+  `city` VARCHAR(10) NULL,
+  PRIMARY KEY (`c_id`),
+  UNIQUE INDEX `c_id_UNIQUE` (`c_id` ASC) VISIBLE);
+
+-----
+
+ALTER TABLE bank.customer ADD DOB DATE NULL;
+
+ALTER TABLE bank.customer MODIFY COLUMN address varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL;
+
+-----
+
+--10.2
+
+INSERT INTO bank.customer (c_id,cname,mno,address,city,DOB)
+	VALUES ('C1','Ankur',838289,'Domlur','Bangalore','1990-09-11');
+
+INSERT INTO bank.customer (c_id,cname,mno,address,city,DOB)
+	VALUES ('C2','John',89849,'Vaishali','Jaipur','1992-10-10');
+
+INSERT INTO bank.customer (c_id,cname,mno,address,city,DOB)
+	VALUES ('C3','Raman',888950,'Marathali','Bangalore','1987-08-15');
+
+UPDATE bank.customer
+SET city='Bangalore'
+WHERE c_id='C2';
+
+
+DELETE FROM bank.customer
+	WHERE c_id='C3'
+
+CREATE TABLE bank.account (
+	acct_no varchar(10) NOT NULL,
+	c_id varchar(10) NULL,
+	`type` varchar(10) NULL,
+	balance INT NULL,
+	CONSTRAINT account_PK PRIMARY KEY (acct_no),
+	CONSTRAINT cust_FK FOREIGN KEY (c_id) REFERENCES bank.customer(c_id)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_0900_ai_ci;
+
+ALTER TABLE bank.account
+ADD CONSTRAINT check_type
+CHECK (account.`type` IN ('savings', 'current'))
+
+INSERT INTO bank.account (acct_no,c_id,`type`,balance)
+	VALUES ('CA1','C1','savings',50000)
+
+INSERT INTO bank.account (acct_no,c_id,`type`,balance)
+	VALUES ('CA2','C1','savings',10000)
+
+
+--10.3
+
+USE bank;
+
+SELECT cname FROM customer
+GROUP BY cname;
+
+SELECT * from customer
+ORDER BY cname ASC;
+
+SELECT cname 
+FROM bank.customer
+GROUP BY cname
+HAVING COUNT(*) > 2;
+
+
+---  For later assignments
+---CHECK (=)
